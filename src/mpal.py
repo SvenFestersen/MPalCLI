@@ -27,6 +27,20 @@ import sys
 import urllib2
 
 #MusicPal actions start
+def action_default(data):
+    p, config = data
+    ip = config.get("connection", "ip")
+    username = config.get("connection", "username")
+    password = config.get("connection", "password")
+    connection.mpal_init_login(ip, username, password)
+    
+    playing = connection.mpal_get_now_playing(ip)
+    volume = float(connection.mpal_get_volume(ip))
+    
+    print "Address: %s" % ip
+    print "Now playing: %s" % playing
+    print "Volume: %d%%" % volume
+
 def action_ip(data, ip=None):
     if ip == None:
         p, config = data
@@ -163,6 +177,7 @@ def init_actions(p, config):
     data = p, config
     
     cmd = clicmd.CLICommand()
+    cmd.register_command("__default__", action_default, data)
     cmd.register_command("ip", action_ip, data)
     cmd.register_command("ip set", action_ip_set, data)
     cmd.register_command("username", action_username, data)

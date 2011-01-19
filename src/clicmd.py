@@ -35,6 +35,11 @@ class CLICommand(object):
     def parse(self):
         cmd = sys.argv[1:]
         i = len(cmd)
+        
+        if i == 0:
+            cmd = ["__default__"]
+            i = 1
+                
         while i > 0:
             if i in self._commands:
                 command = cmd[:i]
