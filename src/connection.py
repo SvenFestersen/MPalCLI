@@ -91,21 +91,14 @@ def mpal_play_pause(ip):
     mpal_get_data(url)
     
 def mpal_get_favs(ip):
-    url = "http://%s/admin/cgi-bin/admin.cgi?f=now_playing&n=../now_playing.html" % ip
-    html = mpal_get_data(url)
-    soup = BeautifulSoup(html)
-    table = soup.find("table", attrs={"class": "table_line"})
-    rows = table.findAll("tr", attrs={"class": "table_alt1"})
+    url = "http://%s/admin/cgi-bin/favorites.cgi" % ip
+    data = mpal_get_data(url)
     
-    result = []
-    
-    for row in rows:
-        col = row.findAll("td")[1]
-        div = col.find("div")
-        name = decode_htmlentities(div.contents[0])
-        id = int(div.attrs[2][1].replace("window.location.href='/admin/cgi-bin/admin.cgi?f=now_playing&n=../now_playing.html&a=p&i=", "").replace("';", ""))
-        result.append((id, name))
-        
+    lines = data.split("\n")
+    stations = filter(lambda line: line.startswith("#EXTINF"), lines)
+    names = map(lambda line: line.split(",")[1].strip(), stations)
+    result = [(i, names[i]) for i in range(0, len(names))]
+
     return result
     
 def mpal_play_fav(ip, id):
