@@ -19,35 +19,22 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
-from BeautifulSoup import BeautifulSoup
-from htmlentitydefs import name2codepoint as n2cp
-import re
 import urllib
 import urllib2
-
-#HTML entity substitution from
-#http://github.com/sku/python-twitter-ircbot/blob/master/html_decode.py
-
-def substitute_entity(match):
-    ent = match.group(3)
+from xml.dom.minidom import parseString
+   
     
-    if match.group(1) == "#":
-        if match.group(2) == '':
-            return unichr(int(ent))
-        elif match.group(2) == 'x':
-            return unichr(int('0x'+ent, 16))
-    else:
-        cp = n2cp.get(ent)
-
-        if cp:
-            return unichr(cp)
-        else:
-            return match.group()
-
-def decode_htmlentities(string):
-    entity_re = re.compile(r'&(#?)(x?)(\d{1,5}|\w{1,8});')
-    return entity_re.subn(substitute_entity, string)[0]
-
+def getText(nodelist):
+    """
+    Get text from text child nodes.
+    code from: http://docs.python.org/library/xml.dom.minidom.html
+    """
+    rc = []
+    for node in nodelist:
+        if node.nodeType == node.TEXT_NODE:
+            rc.append(node.data)
+    return ''.join(rc)
+    
 
 def mpal_init_login(ip, username, password):
     #Installs a urlib2 opener that manages username and password
@@ -63,13 +50,14 @@ def mpal_get_data(url):
     response = urllib2.urlopen(req)
     html = response.read()
     return html
+    
 
 def mpal_get_volume(ip):
-    #Returns the current volume in percent
-    html = mpal_get_data("http://%s/admin/cgi-bin/admin.cgi?f=now_playing_frame&n=../now_playing_frame.html" % ip)
-    soup = BeautifulSoup(html)
-    imgs = soup.findAll("img", attrs={"src": "/images/volume_on.gif"})
-    return 100 * (len(imgs) - 1) / 20.0
+    url = "http://%s/admin/cgi-bin/state.cgi?fav=0" % ip
+    data = mpal_get_data(url)
+    dom = parseString(data)
+    playing = dom.getElementsByTagName("volume")
+    return float(getText(playing[0].childNodes)) * 5
     
 def mpal_set_volume(ip, vol):
     #Set the volume in percent
@@ -77,29 +65,30 @@ def mpal_set_volume(ip, vol):
     url = "http://%s/admin/cgi-bin/admin.cgi?f=volume_set&v=%s&n=../now_playing_frame.html" % (ip, vol)
     mpal_get_data(url)
     
+    
 def mpal_get_now_playing(ip):
-    url = "http://%s/cgi-bin/user.cgi?f=welcome_now_playing&n=../welcome_now_playing.html" % ip
-    html = mpal_get_data(url)
-    soup = BeautifulSoup(html)
-    a = soup.body.contents[0].strip().split(": ", 1)
-    if len(a) == 2:
-        return a[1]
-    return None
+    url = "http://%s/admin/cgi-bin/state.cgi?fav=0" % ip
+    data = mpal_get_data(url)
+    dom = parseString(data)
+    playing = dom.getElementsByTagName("now_playing")
+    return getText(playing[0].childNodes)
+    
     
 def mpal_play_pause(ip):
     url = "http://%s/admin/cgi-bin/admin.cgi?f=play_pause&n=../now_playing_frame.html" % ip
     mpal_get_data(url)
     
-def mpal_get_favs(ip):
-    url = "http://%s/admin/cgi-bin/favorites.cgi" % ip
-    data = mpal_get_data(url)
     
-    lines = data.split("\n")
-    stations = filter(lambda line: line.startswith("#EXTINF"), lines)
-    names = map(lambda line: line.split(",")[1].strip(), stations)
-    result = [(i, names[i]) for i in range(0, len(names))]
-
-    return result
+def mpal_get_favs(ip):
+    url = "http://%s/admin/cgi-bin/state.cgi?fav=1" % ip
+    data = mpal_get_data(url)
+    dom = parseString(data)
+    favs = dom.getElementsByTagName("favorites")[0]
+    names = []
+    for fav in favs.getElementsByTagName("favorite"):
+        nnode = fav.getElementsByTagName("name")[0].childNodes
+        names.append(getText(nnode))
+    return [(i, names[i]) for i in range(0, len(names))]
     
 def mpal_play_fav(ip, id):
     url = "http://%s/admin/cgi-bin/admin.cgi?f=now_playing&n=../now_playing.html&a=p&i=%s" % (ip, id)
