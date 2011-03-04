@@ -147,6 +147,17 @@ def action_play_pause(data):
     connection.mpal_init_login(ip, username, password)
     connection.mpal_play_pause(ip)
     
+def action_play(data, path=None):
+    if not path:
+        print "Stream url missing."
+    else:
+        p, config = data
+        ip = config.get("connection", "ip")
+        username = config.get("connection", "username")
+        password = config.get("connection", "password")
+        connection.mpal_init_login(ip, username, password)
+        connection.mpal_play_stream(ip, path)
+    
 def action_volume(data, volume=None):
     p, config = data
     if volume == None:
@@ -216,6 +227,7 @@ def init_actions(p, config):
     cmd.register_command("playpause", action_play_pause, data)
     cmd.register_command("volume", action_volume, data)
     cmd.register_command("volume set", action_volume_set, data)
+    cmd.register_command("play", action_play, data)
     
     print "MusicPal command-line interface"
     

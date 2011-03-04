@@ -119,3 +119,7 @@ def mpal_play_fav(ip, id):
         mpal_power_up(ip)
     url = "http://%s/admin/cgi-bin/admin.cgi?f=now_playing&n=../now_playing.html&a=p&i=%s" % (ip, id)
     mpal_get_data(url)
+    
+def mpal_play_stream(ip, path):
+    url = "http://%s/admin/cgi-bin/ipc_send?play%%20%s" % (ip, path)
+    mpal_get_data(url)
