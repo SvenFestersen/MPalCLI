@@ -92,6 +92,30 @@ def action_password_set(data, password):
     config.write(open(os.sep.join([p, "mpal.conf"]), "w"))
     print "Password changed."
     
+def action_on(data):
+    p, config = data
+    ip = config.get("connection", "ip")
+    username = config.get("connection", "username")
+    password = config.get("connection", "password")
+    connection.mpal_init_login(ip, username, password)
+    connection.mpal_power_up(ip)
+    
+def action_off(data):
+    p, config = data
+    ip = config.get("connection", "ip")
+    username = config.get("connection", "username")
+    password = config.get("connection", "password")
+    connection.mpal_init_login(ip, username, password)
+    connection.mpal_power_down(ip)
+    
+def action_stop(data):
+    p, config = data
+    ip = config.get("connection", "ip")
+    username = config.get("connection", "username")
+    password = config.get("connection", "password")
+    connection.mpal_init_login(ip, username, password)
+    connection.mpal_stop(ip)
+    
 def action_fav(data, n=None):
     p, config = data
     if n == None:
@@ -184,6 +208,9 @@ def init_actions(p, config):
     cmd.register_command("username set", action_username_set, data)
     cmd.register_command("password", action_password, data)
     cmd.register_command("password set", action_password_set, data)
+    cmd.register_command("on", action_on, data)
+    cmd.register_command("off", action_off, data)
+    cmd.register_command("stop", action_stop, data)
     cmd.register_command("fav", action_fav, data)
     cmd.register_command("fav play", action_fav_play, data)
     cmd.register_command("playpause", action_play_pause, data)

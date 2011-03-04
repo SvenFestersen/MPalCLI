@@ -51,13 +51,37 @@ def mpal_get_data(url):
     html = response.read()
     return html
     
+    
+def mpal_stop(ip):
+    url = "http://%s/admin/cgi-bin/ipc_send?player_stop" % ip
+    mpal_get_data(url)
+    
+    
+def mpal_power_up(ip):
+    url = "http://%s/admin/cgi-bin/ipc_send?power_up" % ip
+    mpal_get_data(url)
+    
+    
+def mpal_power_down(ip):
+    mpal_stop(ip)
+    url = "http://%s/admin/cgi-bin/ipc_send?power_down" % ip
+    mpal_get_data(url)
+    
+    
+def mpal_is_running(ip):
+    url = "http://%s/admin/cgi-bin/state.cgi?fav=0" % ip
+    data = mpal_get_data(url)
+    dom = parseString(data)
+    state = dom.getElementsByTagName("power_state")
+    return getText(state[0].childNodes) == "1"
+    
 
 def mpal_get_volume(ip):
     url = "http://%s/admin/cgi-bin/state.cgi?fav=0" % ip
     data = mpal_get_data(url)
     dom = parseString(data)
-    playing = dom.getElementsByTagName("volume")
-    return float(getText(playing[0].childNodes)) * 5
+    vol = dom.getElementsByTagName("volume")
+    return float(getText(vol[0].childNodes)) * 5
     
 def mpal_set_volume(ip, vol):
     #Set the volume in percent
@@ -91,5 +115,7 @@ def mpal_get_favs(ip):
     return [(i, names[i]) for i in range(0, len(names))]
     
 def mpal_play_fav(ip, id):
+    if not mpal_is_running(ip):
+        mpal_power_up(ip)
     url = "http://%s/admin/cgi-bin/admin.cgi?f=now_playing&n=../now_playing.html&a=p&i=%s" % (ip, id)
     mpal_get_data(url)
