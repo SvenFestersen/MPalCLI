@@ -34,10 +34,14 @@ def action_default(data):
     password = config.get("connection", "password")
     connection.mpal_init_login(ip, username, password)
     
+    running = connection.mpal_is_running(ip)
     playing = connection.mpal_get_now_playing(ip)
     volume = float(connection.mpal_get_volume(ip))
     
+    status = "running" if running else "sleeping"
+    
     print "Address: %s" % ip
+    print "Status: %s" % status
     print "Now playing: %s" % playing
     print "Volume: %d%%" % volume
 
