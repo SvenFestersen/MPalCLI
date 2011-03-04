@@ -43,7 +43,7 @@ Stop playback:
     
 Set volume:
     mpal.py volume [<value>]
-If <value> is omitted, this hows the current volume. <value> has to be
+If &lt;value&gt; is omitted, this hows the current volume. <value> has to be
 an integer in range [0, 100]. The given value is rounded to multiples
 of five.
 An alternative to set the volume is
@@ -51,7 +51,7 @@ An alternative to set the volume is
     
 Play a favorite station:
     mpal.py fav [<id>]
-If <id> is omitted, this prints a list of the favorite stations with
+If &lt;id&gt; is omitted, this prints a list of the favorite stations with
 ids.
 An alternative to play a favorite station is
     mpal.py fav play <id>
