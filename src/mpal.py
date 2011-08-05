@@ -190,9 +190,10 @@ def action_volume_set(data, volume):
 
 def show_help():
     print
-    print "This is a command-line interface for the Freecom MusicPal."
-    print "This project is not affiliated with Freecom."
-    print "See the README file for more information."
+    print "This is a command-line interface for the Freecom MusicPal. This project is not"
+    print "affiliated with Freecom."
+    print "See the README file for more information. Run 'mpal license' for license"
+    print "information."
     print
     print "Usage:"
     print "\tmpal\t\t\tshow MusicPal status"
@@ -202,6 +203,27 @@ def show_help():
     print "\tmpal volume [<vol>]\tdisplay or set volume; <vol>=0...100"
     print "\tmpal fav [<id>]\t\tdisplay or play favorite station(s)"
     print "\tmpal play <url>\t\tplay stream given by <url>"
+    
+def show_license():
+    license_string = """Copyright 2010 Sven Festersen <sven@sven-festersen.de>
+    
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+MA 02110-1301, USA.
+"""
+    print
+    print license_string
 
 
 def check_settings_directory(p):
@@ -251,6 +273,7 @@ def init_actions(p, config):
     cmd.register_command("volume set", action_volume_set, data)
     cmd.register_command("play", action_play, data)
     cmd.register_command("help", show_help)
+    cmd.register_command("license", show_license)
     
     print "MusicPal command-line interface"
     
