@@ -186,6 +186,21 @@ def action_volume_set(data, volume):
 #MusicPal actions end
 
 
+def show_help():
+    print
+    print "This is a command-line interface for the Freecom MusicPal."
+    print "This project is not affiliated with Freecom."
+    print
+    print "Usage:"
+    print "\tmpal\t\t\tshow MusicPal status"
+    print "\tmpal on\t\t\tturn MusicPal on"
+    print "\tmpal off\t\tturn MusicPal off"
+    print "\tmpal playpause\t\tplay/pause"
+    print "\tmpal volume [<vol>]\tdisplay or set volume; <vol>=0...100"
+    print "\tmpal fav [<id>]\t\tdisplay or play favorite station(s)"
+    print "\tmpal play <url>\t\tplay stream given by <url>"
+
+
 def check_settings_directory(p):
     """
     Creates a directory for the configuration file if it does not exist.
@@ -232,6 +247,7 @@ def init_actions(p, config):
     cmd.register_command("volume", action_volume, data)
     cmd.register_command("volume set", action_volume_set, data)
     cmd.register_command("play", action_play, data)
+    cmd.register_command("help", show_help)
     
     print "MusicPal command-line interface"
     
