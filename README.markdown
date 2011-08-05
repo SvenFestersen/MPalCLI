@@ -32,8 +32,8 @@ Turn on the MusicPal:
 Turn off the MusicPal:
     mpal.py off
     
-Play a stream given by <url>:
-    mpal.py play <url>
+Play a stream given by &lt;url&gt;:
+    mpal.py play &lt;url&gt;
     
 Play/pause playback:
     mpal.py playpause
@@ -42,17 +42,17 @@ Stop playback:
     mpal.py stop
     
 Set volume:
-    mpal.py volume [<value>]
+    mpal.py volume [&lt;value&gt;]
 If &lt;value&gt; is omitted, this hows the current volume. &lt;value&gt;
 has to be an integer in range [0, 100]. The given value is rounded to
 multiples of five.
 An alternative to set the volume is
-    mpal.py volume set <value>
+    mpal.py volume set &lt;value&gt;
     
 Play a favorite station:
-    mpal.py fav [<id>]
+    mpal.py fav [&lt;id&gt;]
 If &lt;id&gt; is omitted, this prints a list of the favorite stations
 with ids.
 An alternative to play a favorite station is
-    mpal.py fav play <id>
+    mpal.py fav play &lt;id&gt;
     
