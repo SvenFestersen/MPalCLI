@@ -43,7 +43,7 @@ Stop playback:
     
 Set volume:
     mpal.py volume [&lt;value&gt;]
-If &lt;value&gt; is omitted, this hows the current volume. &lt;value&gt;
+If &lt;value&gt; is omitted, this displays the current volume. &lt;value&gt;
 has to be an integer in range [0, 100]. The given value is rounded to
 multiples of five.
 An alternative to set the volume is
