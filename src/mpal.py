@@ -132,6 +132,8 @@ def action_fav(data, n=None):
         for fav in favs:
             id, name = fav
             print "%2d  %s" % (id, name)
+        print "To play a favorite station, run"
+        print "\tmpal fav <id>"
     else:
         action_fav_play(data, n)
     
@@ -190,6 +192,7 @@ def show_help():
     print
     print "This is a command-line interface for the Freecom MusicPal."
     print "This project is not affiliated with Freecom."
+    print "See the README file for more information."
     print
     print "Usage:"
     print "\tmpal\t\t\tshow MusicPal status"
