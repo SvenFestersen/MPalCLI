@@ -38,6 +38,7 @@ def action_default(data):
     volume = float(connection.mpal_get_volume(ip))
     
     status = "running" if running else "sleeping"
+    playing = playing if playing else "not playing"
     
     print "Address: %s" % ip
     print "Status: %s" % status
